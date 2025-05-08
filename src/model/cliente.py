@@ -19,3 +19,24 @@ class Cliente:
             conn.close()
             return clientes
         return []
+
+    @staticmethod
+    def registrar(nombre, documento, correo, telefono, direccion):
+        conn = conectar_db()
+        if conn:
+           cursor = conn.cursor()
+        try:
+            cursor.execute("""
+                INSERT INTO Cliente (nombre, documento, correo, telefono, direccion)
+                VALUES (?, ?, ?, ?, ?)
+            """, (nombre, documento, correo, telefono, direccion))
+            conn.commit()
+            return True
+        except Exception as e:
+            print("Error al registrar cliente:", e)
+            return False
+        finally:
+            conn.close()
+        return False
+
+

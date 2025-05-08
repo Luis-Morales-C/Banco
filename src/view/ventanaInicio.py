@@ -6,11 +6,12 @@ from PyQt5.QtGui import QFont, QColor, QCursor
 from PyQt5.QtCore import Qt
 import sys
 
-class VentanaInicio(QMainWindow):
-    def __init__(self):
+class VentanaInicio(QMainWindow,):
+    def __init__(self,mostrar_registro_callback):
         super().__init__()
         self.setWindowTitle("Portal Banco")
         self.setFixedSize(700, 800)
+        self.mostrar_registro_callback = mostrar_registro_callback
         self.init_ui()
 
     def init_ui(self):
@@ -34,6 +35,7 @@ class VentanaInicio(QMainWindow):
 
         # Botón Registrar
         boton_registrar = QPushButton("Registrar")
+        boton_registrar.clicked.connect(self.mostrar_registro_callback)
         boton_registrar.setObjectName("card")
         layout.addWidget(boton_registrar)
 
@@ -49,51 +51,51 @@ class VentanaInicio(QMainWindow):
 
         # Estilo general
         self.setStyleSheet("""
-            QWidget {
-                background-color: #181818;
-            }
+    QWidget {
+        background-color: #181818;
+    }
 
-            QLabel {
-                color: white;
-            }
+    QLabel {
+        color: white;
+    }
 
-            QLabel#enlace {
-                color: white;  /* Color blanco para el enlace */
-                font-size: 15px;
-                text-decoration: none;  /* Sin subrayado */
-            }
+    QLabel#enlace {
+        color: white;
+        font-size: 15px;
+        text-decoration: none;
+    }
 
-            QLabel#enlace:link, QLabel#enlace:visited {
-                color: white;  /* Color blanco para el enlace en cualquier estado */
-                text-decoration: none;  /* Asegura que no se subraye */
-            }
+    QLabel#enlace:link, QLabel#enlace:visited {
+        color: white;
+        text-decoration: none;
+    }
 
-            QLabel#enlace:hover {
-                color: #f7ba2b;  /* Cambia color cuando pasa el mouse */
-                text-decoration: underline;  /* Subraya cuando pasa el mouse */
-            }
+    QLabel#enlace:hover {
+        color: #f7ba2b;
+        text-decoration: underline;
+    }
 
-            QPushButton#card {
-                background: qlineargradient(
-                    x1: 0, y1: 0, x2: 1, y2: 0,
-                    stop: 0 #f7ba2b, stop: 1 #ea5358
-                );
-                border: none;
-                color: #181818;
-                font-weight: bold;
-                letter-spacing: 1px;
-                border-radius: 14px;
-                padding: 15px;
-                font-size: 16px;
-                min-width: 200px;
-            }
+    QPushButton#card {
+        background: qlineargradient(
+            x1: 1, y1: 0, x2: 0, y2: 0,
+            stop: 0 #9b59b6, stop: 1 #a5c1e7
+        );
+        border-radius: 16px;
+        padding: 20px;
+        font-size: 15px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        color: white;
+        min-width: 200px;
+        border: none;
+    }
 
-            QPushButton#card:hover {
-                color: #f7ba2b;
-                background: #181818;
-                border: 2px solid #f7ba2b;
-            }
-        """)
+    QPushButton#card:hover {
+        color: #a5c1e7;
+        background: white;
+        transition: color 1s;
+    }
+""")
 
         # Sombra a los botones
         shadow = QGraphicsDropShadowEffect()
