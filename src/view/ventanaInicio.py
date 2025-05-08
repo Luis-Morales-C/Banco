@@ -7,11 +7,12 @@ from PyQt5.QtCore import Qt
 import sys
 
 class VentanaInicio(QMainWindow,):
-    def __init__(self,mostrar_registro_callback):
+    def __init__(self,mostrar_registro_callback,mostrar_login_callback):
         super().__init__()
         self.setWindowTitle("Portal Banco")
         self.setFixedSize(700, 800)
         self.mostrar_registro_callback = mostrar_registro_callback
+        self.mostrar_login_callback = mostrar_login_callback
         self.init_ui()
 
     def init_ui(self):
@@ -31,6 +32,7 @@ class VentanaInicio(QMainWindow,):
         # Botón Login
         boton_login = QPushButton("Login")
         boton_login.setObjectName("card")
+        boton_login.clicked.connect(self.mostrar_login_callback)
         layout.addWidget(boton_login)
 
         # Botón Registrar

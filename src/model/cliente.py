@@ -39,4 +39,20 @@ class Cliente:
             conn.close()
         return False
 
+    @staticmethod
+    def verificar_credenciales(documento,contraseña):
+
+        conn = conectar_db()
+        if conn:
+           cursor = conn.cursor()
+           cursor.execute("SELECT nombre, documento, correo, telefono, direccion FROM Cliente WHERE documento = ?", (documento,))
+           row = cursor.fetchone()
+           conn.close()
+           if row:
+             return Cliente(*row)  # Crea instancia de Cliente
+
+        return None
+
+
+
 
