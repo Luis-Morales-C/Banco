@@ -1,36 +1,35 @@
+import sys
 from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QWidget,
-    QLabel, QPushButton, QVBoxLayout, QLineEdit, QFormLayout
+    QWidget, QLabel, QVBoxLayout, QFormLayout,
+    QLineEdit, QPushButton, QMessageBox
 )
 from PyQt5.QtGui import QFont, QColor, QCursor
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QGraphicsDropShadowEffect
-from src.model.cliente import Cliente
-import sys
 
-class VentanaRegistro(QMainWindow):
-    def __init__(self):
+from src.model.cliente import Cliente
+from src.view.ventanaError import VentanaError
+
+
+class VentanaRegistroCliente(QWidget):
+    def __init__(self, correo_predefinido):
         super().__init__()
-        self.setWindowTitle("Registro - Banco")
-        self.setFixedSize(600, 600)
+        self.correo_predefinido = correo_predefinido
+        self.setWindowTitle("Registro de Cliente")
+        self.setFixedSize(500, 550)
         self.init_ui()
 
     def init_ui(self):
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
-
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignCenter)
         layout.setSpacing(25)
 
-        # Título
-        titulo = QLabel("Register")
+        titulo = QLabel("Registro de Cliente")
         titulo.setFont(QFont("Segoe UI", 26, QFont.Bold))
         titulo.setAlignment(Qt.AlignCenter)
         titulo.setStyleSheet("color: #573b8a;")
         layout.addWidget(titulo)
 
-        # Formulario
         form_layout = QFormLayout()
         form_layout.setSpacing(15)
 
@@ -45,17 +44,13 @@ class VentanaRegistro(QMainWindow):
             }
         """
 
-        self.documento_input = QLineEdit()
-        self.documento_input.setPlaceholderText("Documento")
-        self.documento_input.setStyleSheet(estilo_input)
-
         self.nombre_input = QLineEdit()
         self.nombre_input.setPlaceholderText("Nombre completo")
         self.nombre_input.setStyleSheet(estilo_input)
 
-        self.correo_input = QLineEdit()
-        self.correo_input.setPlaceholderText("Correo electrónico")
-        self.correo_input.setStyleSheet(estilo_input)
+        self.documento_input = QLineEdit()
+        self.documento_input.setPlaceholderText("Documento de identidad")
+        self.documento_input.setStyleSheet(estilo_input)
 
         self.telefono_input = QLineEdit()
         self.telefono_input.setPlaceholderText("Teléfono")
@@ -65,16 +60,20 @@ class VentanaRegistro(QMainWindow):
         self.direccion_input.setPlaceholderText("Dirección")
         self.direccion_input.setStyleSheet(estilo_input)
 
-        form_layout.addRow(self.documento_input)
-        form_layout.addRow(self.nombre_input)
-        form_layout.addRow(self.correo_input)
-        form_layout.addRow(self.telefono_input)
-        form_layout.addRow(self.direccion_input)
+        self.correo_input = QLineEdit()
+        self.correo_input.setText(self.correo_predefinido)
+        self.correo_input.setReadOnly(True)
+        self.correo_input.setStyleSheet(estilo_input)
+
+        form_layout.addRow("Nombre:", self.nombre_input)
+        form_layout.addRow("Documento:", self.documento_input)
+        form_layout.addRow("Teléfono:", self.telefono_input)
+        form_layout.addRow("Dirección:", self.direccion_input)
+        form_layout.addRow("Correo (usuario):", self.correo_input)
 
         layout.addLayout(form_layout)
 
-        # Botón Registrar
-        boton_registrar = QPushButton("Registrar")
+        boton_registrar = QPushButton("Registrar Cliente")
         boton_registrar.setCursor(QCursor(Qt.PointingHandCursor))
         boton_registrar.setStyleSheet("""
             QPushButton {
@@ -92,7 +91,6 @@ class VentanaRegistro(QMainWindow):
         """)
         boton_registrar.clicked.connect(self.registrar_cliente)
 
-        # Sombra al botón
         sombra_boton = QGraphicsDropShadowEffect()
         sombra_boton.setBlurRadius(15)
         sombra_boton.setXOffset(0)
@@ -102,42 +100,37 @@ class VentanaRegistro(QMainWindow):
 
         layout.addWidget(boton_registrar)
 
-        # Fondo general claro
-        central_widget.setStyleSheet("""
+        self.setStyleSheet("""
             QWidget {
                 background-color: #f4f0fa;
                 border-radius: 12px;
             }
         """)
-
-        central_widget.setLayout(layout)
+        self.setLayout(layout)
 
     def registrar_cliente(self):
-     documento = self.documento_input.text()
-     nombre = self.nombre_input.text()
-     correo = self.correo_input.text()
-     telefono = self.telefono_input.text()
-     direccion = self.direccion_input.text()
+        nombre = self.nombre_input.text().strip()
+        documento = self.documento_input.text().strip()
+        telefono = self.telefono_input.text().strip()
+        direccion = self.direccion_input.text().strip()
+        correo = self.correo_input.text().strip()
 
-     if documento and nombre and correo and telefono and direccion:
-           exito = Cliente.registrar(nombre,documento, correo, telefono, direccion)
-           if exito:
-            print("Cliente registrado con éxito.")
-            self.documento_input.clear()
-            self.nombre_input.clear()
-            self.correo_input.clear()
-            self.telefono_input.clear()
-            self.direccion_input.clear()
+        if not all([nombre, documento, telefono, direccion]):
+            VentanaError.mostrar_error(self, "Por favor, complete todos los campos.")
+            return
 
-
-           else:
-            print("Error al registrar el cliente.")
-     else:
-        print("Por favor, complete todos los campos.")
+        exito = Cliente.registrar(nombre, documento, correo, telefono, direccion)
+        if exito:
+            QMessageBox.information(self, "Éxito", "Cliente registrado correctamente.")
+            self.close()
+        else:
+            VentanaError.mostrar_error(self, "Error al registrar cliente. Verifique que el correo exista.")
 
 
+# Solo para pruebas
 if __name__ == "__main__":
+    from PyQt5.QtWidgets import QApplication
     app = QApplication(sys.argv)
-    ventana = VentanaRegistro()
+    ventana = VentanaRegistroCliente("cliente@ejemplo.com")
     ventana.show()
     sys.exit(app.exec_())
