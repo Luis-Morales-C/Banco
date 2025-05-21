@@ -5,6 +5,8 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 
+from src.view.ventanaMisCuentas import MisCuentasWidget
+
 
 #from mis_cuentas import MisCuentasWidget
 #from transacciones import TransaccionesWidget
@@ -59,13 +61,13 @@ class PortalBancario(QMainWindow):
 
         # Área principal con stacked widgets
         self.stack = QStackedWidget()
-        # self.mis_cuentas_panel = MisCuentasWidget()
+        self.mis_cuentas_panel = MisCuentasWidget()
         # self.transacciones_panel = TransaccionesWidget()
         # self.editar_cuenta_panel = EditarCuentaWidget()
         #self.utilidades_panel = UtilidadesWidget()
         # self.soporte_panel = SoporteWidget()
 
-        #self.stack.addWidget(self.mis_cuentas_panel)      # 0
+        self.stack.addWidget(self.mis_cuentas_panel)      # 0
         # self.stack.addWidget(self.transacciones_panel)    # 1
         #self.stack.addWidget(self.editar_cuenta_panel)    # 2
         # self.stack.addWidget(self.utilidades_panel)       # 3
