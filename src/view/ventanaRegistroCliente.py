@@ -9,12 +9,15 @@ from PyQt5.QtWidgets import QGraphicsDropShadowEffect
 
 from src.model.cliente import Cliente
 from src.view.ventanaError import VentanaError
+from src.view.ventanaPortalCliente import PortalBancario
+
 
 
 class VentanaRegistroCliente(QWidget):
-    def __init__(self, correo_predefinido):
+    def __init__(self, correo_predefinido,portal=None):
         super().__init__()
         self.correo_predefinido = correo_predefinido
+        self.portal = portal
         self.setWindowTitle("Registro de Cliente")
         self.setFixedSize(500, 550)
         self.init_ui()
@@ -121,16 +124,25 @@ class VentanaRegistroCliente(QWidget):
 
         exito = Cliente.registrar(nombre, documento, correo, telefono, direccion)
         if exito:
-            QMessageBox.information(self, "Éxito", "Cliente registrado correctamente.")
-            self.close()
-        else:
-            VentanaError.mostrar_error(self, "Error al registrar cliente. Verifique que el correo exista.")
+           QMessageBox.information(self, "Éxito", "Cliente registrado correctamente.")
+           self.close()
 
+           # Crear y mostrar portal asegurando que la referencia persista
+           self.portal = PortalBancario()
+           self.portal.show()
+        else:
+           VentanaError.mostrar_error(self, "Error al registrar cliente. Verifique que el correo exista.")
+
+    def abrir_ventana_portal(self, correo_usuario):
+        self.cliente_window = VentanaRegistroCliente(correo_usuario)
+        self.cliente_window.show()
+        self.close()
 
 # Solo para pruebas
 if __name__ == "__main__":
     from PyQt5.QtWidgets import QApplication
     app = QApplication(sys.argv)
-    ventana = VentanaRegistroCliente("cliente@ejemplo.com")
+    portal = PortalBancario()
+    ventana = VentanaRegistroCliente("cliente@ejemplo.com",portal=portal)
     ventana.show()
     sys.exit(app.exec_())
