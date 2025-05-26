@@ -6,6 +6,10 @@ from PyQt5.QtGui import QFont, QColor, QCursor
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QGraphicsDropShadowEffect
 from src.model.cliente import Cliente
+from src.view.ventanaPortalCliente import PortalBancario
+from src.view.ventanaError import VentanaError
+
+
 import sys
 
 class VentanaLogin(QMainWindow):
@@ -97,16 +101,21 @@ class VentanaLogin(QMainWindow):
         central_widget.setLayout(layout)
 
     def iniciar_sesion(self):
-        documento = self.documento_input.text()
-        contrasena = self.contrasena_input.text()
+        documento = self.documento_input.text().strip()
+        contrasena = self.contrasena_input.text().strip()
 
         if documento and contrasena:
-            if Cliente.verificar_credenciales(documento, contrasena):
-                print("Inicio de sesión exitoso.")
-            else:
-                print("Documento o contraseña incorrectos.")
+           if Cliente.verificar_credenciales(documento, contrasena):
+            self.portal = PortalBancario()
+            self.portal.show()
+            self.close()
+           else:
+            VentanaError.mostrar_error(self, "Documento o contraseña incorrectos.")
         else:
-            print("Por favor, complete todos los campos.")
+          VentanaError.mostrar_error(self, "Por favor, complete todos los campos.")
+
+
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

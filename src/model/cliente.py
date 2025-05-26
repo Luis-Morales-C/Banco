@@ -31,3 +31,28 @@ class Cliente:
             finally:
                 conn.close()
         return False
+
+
+    @staticmethod
+    def verificar_credenciales(documento, contrasena):
+      conn = conectar_db()
+      if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT u.contrasena
+                FROM Cliente c
+                JOIN Usuario u ON c.id_usuario = u.id_usuario
+                WHERE c.documento = ?
+            """, (documento,))
+            resultado = cursor.fetchone()
+            if resultado:
+                contrasena_guardada = resultado[0]
+                return contrasena_guardada == contrasena
+            else:
+                return False
+        except Exception as e:
+            print("Error al verificar credenciales:", e)
+        finally:
+            conn.close()
+      return False

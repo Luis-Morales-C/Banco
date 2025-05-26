@@ -18,3 +18,22 @@ class Cuenta:
             conn.close()
             return cuentas
         return []
+
+    @staticmethod
+    def crear(num_cuenta, tipo_cuenta, monto, documento_cliente):
+      try:
+        conn = conectar_db()
+        if conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO Cuenta (numCuenta, tipoCuenta, fechaApertura, saldo, documentoCliente)
+                VALUES (?, ?, GETDATE(), ?, ?)
+            """, (num_cuenta, tipo_cuenta, monto, documento_cliente))
+            conn.commit()
+            conn.close()
+            return True
+      except Exception as e:
+        print("Error al crear cuenta:", e)
+        return False
+
+
