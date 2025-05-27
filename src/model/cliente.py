@@ -27,7 +27,7 @@ class Cliente:
                 """, (nombre, documento, correo, telefono, direccion, estado, id_usuario))
                 conn.commit()
 
-                # Obtener el id_cliente recién insertado
+
                 cursor.execute("SELECT id_cliente FROM Cliente WHERE documento = ?", (documento,))
                 id_cliente = cursor.fetchone()[0]
                 return id_cliente

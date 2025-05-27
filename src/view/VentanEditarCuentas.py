@@ -18,18 +18,17 @@ class EditarInformacionPersonalWidget(QWidget):
         layout = QVBoxLayout()
         layout.setSpacing(20)
 
-        # Contenedor de contenido alineado arriba
         contenido = QWidget()
         contenido_layout = QVBoxLayout()
         contenido.setLayout(contenido_layout)
         contenido.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
 
-        # Título
+
         titulo = QLabel("Editar Información Personal")
         titulo.setStyleSheet("font-size: 24px; font-weight: bold; color: #573b8a;")
         contenido_layout.addWidget(titulo)
 
-        # Formulario
+
         form_layout = QFormLayout()
         self.input_correo = QLineEdit()
         self.input_telefono = QLineEdit()
@@ -40,15 +39,14 @@ class EditarInformacionPersonalWidget(QWidget):
         form_layout.addRow("Dirección:", self.input_direccion)
         contenido_layout.addLayout(form_layout)
 
-        # Botón de guardar
+
         self.btn_guardar = QPushButton("Guardar Cambios")
         self.btn_guardar.clicked.connect(self.actualizar_informacion)
         contenido_layout.addWidget(self.btn_guardar)
 
-        # Añadir contenido al layout principal alineado arriba
         layout.addWidget(contenido, alignment=Qt.AlignTop)
 
-        # Tabla para mostrar la información del cliente
+
         self.tabla_cliente = QTableWidget()
         self.tabla_cliente.setColumnCount(6)
         self.tabla_cliente.setHorizontalHeaderLabels([
@@ -59,7 +57,7 @@ class EditarInformacionPersonalWidget(QWidget):
 
         self.setLayout(layout)
 
-        # Cargar los datos del cliente
+
         self.cargar_datos()
         self.cargar_tabla_cliente()
 

@@ -8,10 +8,9 @@ from PyQt5.QtCore import Qt, pyqtSignal
 from datetime import datetime
 from src.model.cuenta import Cuenta
 
-# from src.model.transaccion import Transaccion  # Puedes usarla si la necesitas
 
 class MisCuentasWidget(QWidget):
-    cuenta_creada = pyqtSignal()  # Señal que se emite al crear una cuenta
+    cuenta_creada = pyqtSignal()
 
     def __init__(self, id_cliente):
         super().__init__()

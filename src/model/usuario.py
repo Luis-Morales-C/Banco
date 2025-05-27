@@ -27,7 +27,7 @@ class Usuario:
                 id_insertado = cursor.fetchone()[0]
                 conn.commit()
                 conn.close()
-                return id_insertado  # Retorna el ID del usuario creado
+                return id_insertado
             except Exception as e:
                 print("Error al registrar usuario:", e)
                 conn.close()

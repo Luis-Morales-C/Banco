@@ -35,7 +35,7 @@ class MisTransaccionesWidget(QWidget):
         self.descripcion = QLineEdit()
         self.campo_adicional = QLineEdit()
 
-        # Configurar layout
+
         form_layout = QFormLayout()
         form_layout.addRow("Tipo de transacción:", self.tipo_transaccion)
         form_layout.addRow("Cuenta origen:", self.combo_cuenta_origen)
@@ -53,7 +53,7 @@ class MisTransaccionesWidget(QWidget):
         boton_registrar = QPushButton("Registrar Transacción")
         boton_registrar.clicked.connect(self.registrar_transaccion)
 
-        # Agregar componentes al layout principal
+
         layout.addLayout(form_layout)
         layout.addWidget(boton_registrar)
         layout.addWidget(QLabel("Historial de Transacciones:"))

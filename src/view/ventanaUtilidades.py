@@ -18,17 +18,17 @@ class UtilidadesWidget(QWidget):
         layout = QVBoxLayout()
         layout.setSpacing(20)
 
-        # Título
+
         titulo = QLabel("Herramientas y Utilidades")
         titulo.setStyleSheet("font-size: 24px; font-weight: bold; color: #573b8a;")
         layout.addWidget(titulo, alignment=Qt.AlignTop)
 
-        # Calculadora
+
         btn_calculadora = QPushButton("Abrir Calculadora del Sistema")
         btn_calculadora.clicked.connect(self.abrir_calculadora)
         layout.addWidget(btn_calculadora)
 
-        # Calendario
+
         lbl_calendario = QLabel("Calendario")
         lbl_calendario.setStyleSheet("font-size: 18px; font-weight: bold;")
         layout.addWidget(lbl_calendario)
@@ -36,7 +36,7 @@ class UtilidadesWidget(QWidget):
         self.calendario = QCalendarWidget()
         layout.addWidget(self.calendario)
 
-        # Botón para abrir ventana de retiro
+
         btn_retiro = QPushButton("Abrir Simulador de Retiro")
         btn_retiro.clicked.connect(self.abrir_ventana_retiro)
         layout.addWidget(btn_retiro)

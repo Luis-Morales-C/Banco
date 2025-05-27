@@ -16,17 +16,17 @@ class Transaccion:
             conn = conectar_db()
             cursor = conn.cursor()
 
-            # Todos los tipos inician como exitosos excepto retiros
+
             estado = 'Exitosa' if tipo_transaccion in ['Deposito', 'Transferencia'] else 'Pendiente'
 
-            # Validar saldo para Transferencia/Retiro
+
             if tipo_transaccion in ['Transferencia', 'Retiro']:
                 cursor.execute("SELECT saldo FROM Cuenta WHERE id_cuenta = ?", (id_cuenta,))
                 saldo_actual = cursor.fetchone()[0]
                 if saldo_actual < monto:
                     raise ValueError("Saldo insuficiente")
 
-            # Insertar transacción
+
             cursor.execute("""
                 INSERT INTO Transaccion (tipo_transaccion, id_cuenta, monto, fecha_transaccion, estado)
                 OUTPUT INSERTED.id_transaccion
@@ -35,7 +35,7 @@ class Transaccion:
 
             id_transaccion = cursor.fetchone()[0]
 
-            # Lógica para Transferencia
+
             if tipo_transaccion == 'Transferencia':
                 num_destino = kwargs.get('cuentaDestino')
                 if not num_destino:
@@ -45,17 +45,17 @@ class Transaccion:
                 if not id_destino:
                     raise ValueError("Cuenta destino no existe")
 
-                # Restar de origen y sumar a destino
+
                 cursor.execute("UPDATE Cuenta SET saldo = saldo - ? WHERE id_cuenta = ?", (monto, id_cuenta))
                 cursor.execute("UPDATE Cuenta SET saldo = saldo + ? WHERE id_cuenta = ?", (monto, id_destino))
                 cursor.execute("INSERT INTO Transferencia (id_transaccion, cuenta_destino) VALUES (?, ?)",
                                (id_transaccion, id_destino))
 
-            # Lógica para Depósito
+
             elif tipo_transaccion == 'Deposito':
                 cursor.execute("UPDATE Cuenta SET saldo = saldo + ? WHERE id_cuenta = ?", (monto, id_cuenta))
 
-            # Lógica para Retiro
+
             elif tipo_transaccion == 'Retiro':
                 codigo = generar_codigo_retiro()
                 cursor.execute("INSERT INTO Retiro (id_transaccion, codigo_seguridad) VALUES (?, ?)",
@@ -161,14 +161,13 @@ class Transaccion:
             if not conn:
                 raise ConnectionError("No se pudo conectar a la base de datos")
 
-            # Desactivar autocommit para manejar transacciones manualmente
-            # En pyodbc se hace con: conn.autocommit = False
+
             conn.autocommit = False
             cursor = conn.cursor()
 
             retiro = Transaccion.validar_retiro(codigo_seguridad)
 
-            # Descontar saldo usando método de Cuenta, pasando el cursor para que participe en la transacción
+
             Cuenta.descontar_saldo(retiro['id_cuenta'], retiro['monto'], cursor)
 
             cursor.execute("""

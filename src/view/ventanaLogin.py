@@ -35,7 +35,7 @@ class VentanaLogin(QMainWindow):
         titulo.setStyleSheet("color: #573b8a;")
         layout.addWidget(titulo)
 
-        # Formulario
+
         form_layout = QFormLayout()
         form_layout.setSpacing(15)
 
@@ -64,7 +64,7 @@ class VentanaLogin(QMainWindow):
 
         layout.addLayout(form_layout)
 
-        # Botón Login
+
         boton_login = QPushButton("Iniciar sesión")
         boton_login.setCursor(QCursor(Qt.PointingHandCursor))
         boton_login.setStyleSheet("""

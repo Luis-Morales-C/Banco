@@ -125,13 +125,12 @@ class VentanaRegistroCliente(QWidget):
          return
 
 
-    # registrar() ahora devuelve el id_cliente si tuvo éxito
+
       cliente_id = Cliente.registrar(nombre, documento, correo, telefono, direccion)
       if cliente_id:
         QMessageBox.information(self, "Éxito", "Cliente registrado correctamente.")
         self.close()
 
-        # Crear y mostrar portal bancario
         self.portal = PortalBancario(cliente_id)
         self.portal.show()
       else:

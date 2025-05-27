@@ -23,25 +23,24 @@ class VentanaInicio(QMainWindow,):
         layout.setAlignment(Qt.AlignCenter)
         layout.setSpacing(25)
 
-        # Título
         titulo = QLabel("Portal Banco")
         titulo.setFont(QFont("Segoe UI", 26, QFont.Bold))
         titulo.setAlignment(Qt.AlignCenter)
         layout.addWidget(titulo)
 
-        # Botón Login
+
         boton_login = QPushButton("Login")
         boton_login.setObjectName("card")
         boton_login.clicked.connect(self.mostrar_login_callback)
         layout.addWidget(boton_login)
 
-        # Botón Registrar
+
         boton_registrar = QPushButton("Registrar")
         boton_registrar.clicked.connect(self.mostrar_registro_callback)
         boton_registrar.setObjectName("card")
         layout.addWidget(boton_registrar)
 
-        # Enlace de recuperación
+
         label_olvide = QLabel("<a href='#'>¿Se te olvidó tu contraseña?</a>")
         label_olvide.setAlignment(Qt.AlignCenter)
         label_olvide.setTextFormat(Qt.RichText)
@@ -99,7 +98,7 @@ class VentanaInicio(QMainWindow,):
     }
 """)
 
-        # Sombra a los botones
+
         shadow = QGraphicsDropShadowEffect()
         shadow.setBlurRadius(25)
         shadow.setXOffset(0)

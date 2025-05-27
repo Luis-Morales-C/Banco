@@ -24,14 +24,13 @@ class VentanaCrearCuenta(QMainWindow):
         layout.setAlignment(Qt.AlignCenter)
         layout.setSpacing(20)
 
-        # Título
         titulo = QLabel("Crear Nueva Cuenta")
         titulo.setFont(QFont("Segoe UI", 24, QFont.Bold))
         titulo.setAlignment(Qt.AlignCenter)
         titulo.setStyleSheet("color: #573b8a;")
         layout.addWidget(titulo)
 
-        # Formulario
+
         form_layout = QFormLayout()
         form_layout.setSpacing(15)
 
@@ -46,13 +45,13 @@ class VentanaCrearCuenta(QMainWindow):
             }
         """
 
-        # Combo de tipos de cuenta
+
         self.tipo_combo = QComboBox()
         self.tipo_combo.setStyleSheet(estilo_input)
         try:
             tipos = Cuenta.obtener_tipos_autoapertura()
             for tipo in tipos:
-                # tipo: (id_tipo, nombre)
+
                 self.tipo_combo.addItem(tipo[1], tipo[0])
         except Exception as e:
             print("Error al cargar tipos de cuenta:", e)
@@ -68,7 +67,7 @@ class VentanaCrearCuenta(QMainWindow):
 
         layout.addLayout(form_layout)
 
-        # Botón Crear Cuenta
+
         boton_crear = QPushButton("Crear Cuenta")
         boton_crear.setCursor(QCursor(Qt.PointingHandCursor))
         boton_crear.setStyleSheet("""
