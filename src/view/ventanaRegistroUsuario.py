@@ -22,6 +22,8 @@ class VentanaRegistroUsuario(QMainWindow):
         self.setFixedSize(500, 550)
         self.init_ui()
 
+
+
     def init_ui(self):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)

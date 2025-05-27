@@ -6,10 +6,11 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 
 from src.view.ventanaMisCuentas import MisCuentasWidget
+from src.view.ventanaTransaccion import MisTransaccionesWidget
 
 
 class PortalBancario(QMainWindow):
-    def __init__(self):
+    def __init__(self, cliente_id):
         super().__init__()
         self.setWindowTitle("Portal Bancario")
         self.setFixedSize(900, 600)
@@ -56,28 +57,21 @@ class PortalBancario(QMainWindow):
         # Área principal con stacked widgets
         self.stack = QStackedWidget()
 
-        cliente_id = 123  # Aquí pones el ID real del cliente logueado
         self.mis_cuentas_panel = MisCuentasWidget(cliente_id)
+        self.transacciones_panel = MisTransaccionesWidget(cliente_id)
 
-        # Comentamos otros widgets que no están implementados
-        # self.transacciones_panel = TransaccionesWidget()
-        # self.editar_cuenta_panel = EditarCuentaWidget()
-        # self.utilidades_panel = UtilidadesWidget()
-        # self.soporte_panel = SoporteWidget()
+        # Conectar señal para actualizar cuentas al crear una nueva
+        self.mis_cuentas_panel.cuenta_creada.connect(self.transacciones_panel.actualizar_cuentas)
 
         self.stack.addWidget(self.mis_cuentas_panel)      # índice 0
-        # self.stack.addWidget(self.transacciones_panel)    # índice 1
-        # self.stack.addWidget(self.editar_cuenta_panel)    # índice 2
-        # self.stack.addWidget(self.utilidades_panel)       # índice 3
-        # self.stack.addWidget(self.soporte_panel)           # índice 4
+        self.stack.addWidget(self.transacciones_panel)    # índice 1
 
         main_layout.addWidget(sidebar)
         main_layout.addWidget(self.stack)
 
         # Conectar botones para cambiar paneles
         self.btn_mis_cuentas.clicked.connect(lambda: self.stack.setCurrentIndex(0))
-        # De momento, como no están implementados, no conectamos estos botones:
-        # self.btn_transacciones.clicked.connect(lambda: self.stack.setCurrentIndex(1))
+        self.btn_transacciones.clicked.connect(lambda: self.stack.setCurrentIndex(1))
         # self.btn_editar_cuenta.clicked.connect(lambda: self.stack.setCurrentIndex(2))
         # self.btn_utilidades.clicked.connect(lambda: self.stack.setCurrentIndex(3))
         # self.btn_soporte.clicked.connect(lambda: self.stack.setCurrentIndex(4))
@@ -87,6 +81,6 @@ class PortalBancario(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    ventana = PortalBancario()
-    ventana.show()
+    #ventana = PortalBancario(cliente_id)
+    #ventana.show()
     sys.exit(app.exec_())

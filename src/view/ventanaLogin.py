@@ -15,6 +15,7 @@ import sys
 class VentanaLogin(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.portal = None
         self.setWindowTitle("Login - Banco")
         self.setFixedSize(650, 650)
         self.init_ui()
@@ -105,12 +106,15 @@ class VentanaLogin(QMainWindow):
         contrasena = self.contrasena_input.text().strip()
 
         if documento and contrasena:
-           if Cliente.verificar_credenciales(documento, contrasena):
-            self.portal = PortalBancario()
-            self.portal.show()
-            self.close()
+           cliente_id = Cliente.verificar_credenciales(documento, contrasena)
+           # Suponemos que verifica y devuelve cliente_id o None
+
+           if cliente_id:
+              self.portal = PortalBancario(cliente_id)
+              self.portal.show()
+              self.close()
            else:
-            VentanaError.mostrar_error(self, "Documento o contraseña incorrectos.")
+              VentanaError.mostrar_error(self, "Documento o contraseña incorrectos.")
         else:
           VentanaError.mostrar_error(self, "Por favor, complete todos los campos.")
 

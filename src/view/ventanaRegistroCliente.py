@@ -11,12 +11,10 @@ from src.model.cliente import Cliente
 from src.view.ventanaError import VentanaError
 from src.view.ventanaPortalCliente import PortalBancario
 
-
-
 class VentanaRegistroCliente(QWidget):
-    def __init__(self, correo_predefinido,portal=None):
+    def __init__(self, correo_usuario=None, portal=None, *args, **kwargs):
         super().__init__()
-        self.correo_predefinido = correo_predefinido
+        self.correo_usuario = correo_usuario
         self.portal = portal
         self.setWindowTitle("Registro de Cliente")
         self.setFixedSize(500, 550)
@@ -64,7 +62,7 @@ class VentanaRegistroCliente(QWidget):
         self.direccion_input.setStyleSheet(estilo_input)
 
         self.correo_input = QLineEdit()
-        self.correo_input.setText(self.correo_predefinido)
+        self.correo_input.setText(self.correo_usuario)
         self.correo_input.setReadOnly(True)
         self.correo_input.setStyleSheet(estilo_input)
 
@@ -112,37 +110,38 @@ class VentanaRegistroCliente(QWidget):
         self.setLayout(layout)
 
     def registrar_cliente(self):
-        nombre = self.nombre_input.text().strip()
-        documento = self.documento_input.text().strip()
-        telefono = self.telefono_input.text().strip()
-        direccion = self.direccion_input.text().strip()
-        correo = self.correo_input.text().strip()
+      nombre = self.nombre_input.text().strip()
+      documento = self.documento_input.text().strip()
+      telefono = self.telefono_input.text().strip()
+      direccion = self.direccion_input.text().strip()
+      correo = self.correo_input.text().strip()
 
-        if not all([nombre, documento, telefono, direccion]):
-            VentanaError.mostrar_error(self, "Por favor, complete todos los campos.")
-            return
+      if not all([nombre, documento, telefono, direccion]):
+          VentanaError.mostrar_error(self, "Por favor, complete todos los campos.")
+          return
 
-        exito = Cliente.registrar(nombre, documento, correo, telefono, direccion)
-        if exito:
-           QMessageBox.information(self, "Éxito", "Cliente registrado correctamente.")
-           self.close()
+      if Cliente.existe_por_documento(documento):
+         VentanaError.mostrar_error(self, "Ya existe un cliente con ese documento.")
+         return
 
-           # Crear y mostrar portal asegurando que la referencia persista
-           self.portal = PortalBancario()
-           self.portal.show()
-        else:
-           VentanaError.mostrar_error(self, "Error al registrar cliente. Verifique que el correo exista.")
 
-    def abrir_ventana_portal(self, correo_usuario):
-        self.cliente_window = VentanaRegistroCliente(correo_usuario)
-        self.cliente_window.show()
+    # registrar() ahora devuelve el id_cliente si tuvo éxito
+      cliente_id = Cliente.registrar(nombre, documento, correo, telefono, direccion)
+      if cliente_id:
+        QMessageBox.information(self, "Éxito", "Cliente registrado correctamente.")
         self.close()
 
-# Solo para pruebas
+        # Crear y mostrar portal bancario
+        self.portal = PortalBancario(cliente_id)
+        self.portal.show()
+      else:
+        VentanaError.mostrar_error(
+            self,
+            "Error al registrar cliente. Verifique que el correo exista y que documento/correo no estén duplicados."
+        )
+
+# Para pruebas
 if __name__ == "__main__":
     from PyQt5.QtWidgets import QApplication
     app = QApplication(sys.argv)
-    portal = PortalBancario()
-    ventana = VentanaRegistroCliente("cliente@ejemplo.com",portal=portal)
-    ventana.show()
     sys.exit(app.exec_())
