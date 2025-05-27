@@ -9,7 +9,7 @@ from src.view.ventanaMisCuentas import MisCuentasWidget
 from src.view.ventanaTransaccion import MisTransaccionesWidget
 from src.view.VentanEditarCuentas import EditarInformacionPersonalWidget
 from src.view.ventanaUtilidades import UtilidadesWidget
-
+from src.view.ventanaRetiro import VentanaRetiro
 
 class PortalBancario(QMainWindow):
     def __init__(self, cliente_id):
@@ -63,7 +63,8 @@ class PortalBancario(QMainWindow):
 
         self.mis_cuentas_panel = MisCuentasWidget(cliente_id)
         self.transacciones_panel = MisTransaccionesWidget(cliente_id)
-        self.utilidades_panel = UtilidadesWidget()
+        self.utilidades_panel = UtilidadesWidget(cliente_id)
+        self.retiro_panel = VentanaRetiro(cliente_id)
 
 
 
@@ -71,6 +72,8 @@ class PortalBancario(QMainWindow):
         # Conectar señal para actualizar cuentas al crear una nueva
         self.mis_cuentas_panel.cuenta_creada.connect(self.transacciones_panel.actualizar_cuentas)
         self.transacciones_panel.transaccion_realizada.connect(self.mis_cuentas_panel.actualizar_tabla)
+        self.retiro_panel.retiro_exitoso.connect(self.mis_cuentas_panel.actualizar_tabla)
+        self.retiro_panel.retiro_exitoso.connect(self.transacciones_panel.actualizar_cuentas)
 
 
 
@@ -79,6 +82,7 @@ class PortalBancario(QMainWindow):
         self.stack.addWidget(self.transacciones_panel)
         self.stack.addWidget(self.editar_cliente_panel)
         self.stack.addWidget(self.utilidades_panel)
+        self.stack.addWidget(self.retiro_panel)
 
         main_layout.addWidget(sidebar)
         main_layout.addWidget(self.stack)

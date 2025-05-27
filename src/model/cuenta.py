@@ -84,3 +84,36 @@ class Cuenta:
         except Exception as e:
             print(f"Error al obtener id de cuenta por número: {e}")
             return None
+
+    @staticmethod
+    def actualizar_saldo(id_cuenta, nuevo_saldo):
+        try:
+            conn = conectar_db()
+            if conn:
+                cursor = conn.cursor()
+                cursor.execute("UPDATE Cuenta SET saldo = ? WHERE id_cuenta = ?", (nuevo_saldo, id_cuenta))
+                conn.commit()
+                conn.close()
+                return True
+        except Exception as e:
+            print(f"Error al actualizar saldo: {e}")
+        return False
+
+    @staticmethod
+    def descontar_saldo(id_cuenta, monto, cursor=None):
+        if cursor:
+            # Asumimos que el cursor está dentro de una transacción activa
+            cursor.execute("UPDATE Cuenta SET saldo = saldo - ? WHERE id_cuenta = ?", (monto, id_cuenta))
+            return True
+        else:
+            try:
+                conn = conectar_db()
+                if conn:
+                    cur = conn.cursor()
+                    cur.execute("UPDATE Cuenta SET saldo = saldo - ? WHERE id_cuenta = ?", (monto, id_cuenta))
+                    conn.commit()
+                    conn.close()
+                    return True
+            except Exception as e:
+                print(f"Error al descontar saldo: {e}")
+            return False
