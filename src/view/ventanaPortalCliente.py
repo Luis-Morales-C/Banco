@@ -7,13 +7,15 @@ from PyQt5.QtCore import Qt
 
 from src.view.ventanaMisCuentas import MisCuentasWidget
 from src.view.ventanaTransaccion import MisTransaccionesWidget
+from src.view.VentanEditarCuentas import EditarInformacionPersonalWidget
+from src.view.ventanaUtilidades import UtilidadesWidget
 
 
 class PortalBancario(QMainWindow):
     def __init__(self, cliente_id):
         super().__init__()
         self.setWindowTitle("Portal Bancario")
-        self.setFixedSize(900, 600)
+        self.setFixedSize(1000,600)
 
         main_widget = QWidget()
         main_layout = QHBoxLayout(main_widget)
@@ -30,7 +32,7 @@ class PortalBancario(QMainWindow):
         # Botones sidebar
         self.btn_mis_cuentas = QPushButton("Mis Cuentas")
         self.btn_transacciones = QPushButton("Transacciones")
-        self.btn_editar_cuenta = QPushButton("Editar Cuenta")
+        self.btn_editar_cuenta = QPushButton("Editar")
         self.btn_utilidades = QPushButton("Utilidades")
         self.btn_soporte = QPushButton("Soporte")
 
@@ -57,8 +59,14 @@ class PortalBancario(QMainWindow):
         # Área principal con stacked widgets
         self.stack = QStackedWidget()
 
+        self.editar_cliente_panel =EditarInformacionPersonalWidget(cliente_id)
+
         self.mis_cuentas_panel = MisCuentasWidget(cliente_id)
         self.transacciones_panel = MisTransaccionesWidget(cliente_id)
+        self.utilidades_panel = UtilidadesWidget()
+
+
+
 
         # Conectar señal para actualizar cuentas al crear una nueva
         self.mis_cuentas_panel.cuenta_creada.connect(self.transacciones_panel.actualizar_cuentas)
@@ -67,8 +75,10 @@ class PortalBancario(QMainWindow):
 
 
 
-        self.stack.addWidget(self.mis_cuentas_panel)      # índice 0
-        self.stack.addWidget(self.transacciones_panel)    # índice 1
+        self.stack.addWidget(self.mis_cuentas_panel)
+        self.stack.addWidget(self.transacciones_panel)
+        self.stack.addWidget(self.editar_cliente_panel)
+        self.stack.addWidget(self.utilidades_panel)
 
         main_layout.addWidget(sidebar)
         main_layout.addWidget(self.stack)
@@ -76,8 +86,8 @@ class PortalBancario(QMainWindow):
         # Conectar botones para cambiar paneles
         self.btn_mis_cuentas.clicked.connect(lambda: self.stack.setCurrentIndex(0))
         self.btn_transacciones.clicked.connect(lambda: self.stack.setCurrentIndex(1))
-        # self.btn_editar_cuenta.clicked.connect(lambda: self.stack.setCurrentIndex(2))
-        # self.btn_utilidades.clicked.connect(lambda: self.stack.setCurrentIndex(3))
+        self.btn_editar_cuenta.clicked.connect(lambda: self.stack.setCurrentIndex(2))
+        self.btn_utilidades.clicked.connect(lambda: self.stack.setCurrentIndex(3))
         # self.btn_soporte.clicked.connect(lambda: self.stack.setCurrentIndex(4))
 
         self.stack.setCurrentIndex(0)  # Ventana inicial
