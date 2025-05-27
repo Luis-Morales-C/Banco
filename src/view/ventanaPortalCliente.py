@@ -62,6 +62,9 @@ class PortalBancario(QMainWindow):
 
         # Conectar señal para actualizar cuentas al crear una nueva
         self.mis_cuentas_panel.cuenta_creada.connect(self.transacciones_panel.actualizar_cuentas)
+        self.transacciones_panel.transaccion_realizada.connect(self.mis_cuentas_panel.actualizar_datos)
+
+
 
         self.stack.addWidget(self.mis_cuentas_panel)      # índice 0
         self.stack.addWidget(self.transacciones_panel)    # índice 1

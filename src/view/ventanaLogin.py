@@ -102,21 +102,23 @@ class VentanaLogin(QMainWindow):
         central_widget.setLayout(layout)
 
     def iniciar_sesion(self):
-        documento = self.documento_input.text().strip()
-        contrasena = self.contrasena_input.text().strip()
+      documento = self.documento_input.text().strip()
+      contrasena = self.contrasena_input.text().strip()
 
-        if documento and contrasena:
-           cliente_id = Cliente.verificar_credenciales(documento, contrasena)
-           # Suponemos que verifica y devuelve cliente_id o None
+      if not documento or not contrasena:
+        VentanaError.mostrar_error(self, "Por favor, complete todos los campos.")
+        return
 
-           if cliente_id:
-              self.portal = PortalBancario(cliente_id)
-              self.portal.show()
-              self.close()
-           else:
-              VentanaError.mostrar_error(self, "Documento o contraseña incorrectos.")
+      try:
+        cliente_id = Cliente.verificar_credenciales(documento, contrasena)
+        if cliente_id:
+            self.portal = PortalBancario(cliente_id)
+            self.portal.show()
+            self.close()
         else:
-          VentanaError.mostrar_error(self, "Por favor, complete todos los campos.")
+            VentanaError.mostrar_error(self, "Documento o contraseña incorrectos.")
+      except Exception as e:
+        VentanaError.mostrar_error(self, f"Ocurrió un error inesperado:\n{e}")
 
 
 
